@@ -1,5 +1,7 @@
 # QuickStart
 
+This template will spin up a single Azure SQL Database.
+
 ## Initialise
 
 ```sh
