@@ -19,11 +19,17 @@ choco install dotnetcore-sdk -y
 # VS Code
 choco install vscode -y
 
+# Chrome
+choco install googlechrome -y 
+
 # Utilities
 choco install everything /run-on-system-startup /desktop-shortcut -y
 
 # Enable HyperV for Docker
 Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V,Containers -All
+
+# Change TimeZone
+tzutil /s "Singapore Standard Time"
 
 # Restart
 Restart-Computer -Force
