@@ -146,3 +146,25 @@ resource "azurerm_virtual_machine" "vm-windows" {
     environment = "${var.environment}"
   }
 }
+
+resource "azurerm_virtual_machine_extension" "vmext" {
+  name                 = "bootstrap.ps1"
+  location             = "${azurerm_resource_group.rg.location}"
+  resource_group_name  = "${azurerm_resource_group.rg.name}"
+  virtual_machine_name = "${azurerm_virtual_machine.vm-windows.name}"
+  publisher            = "Microsoft.Compute"
+  type                 = "CustomScriptExtension"
+  type_handler_version = "1.9"
+
+  settings = <<SETTINGS
+    {
+         "fileUris": ["https://raw.githubusercontent.com/melvinlee/azure-devlab/master/vm-windows10/bootstrap.ps1"]
+    }
+  SETTINGS
+
+  protected_settings = <<SETTINGS
+    {
+        "commandToExecute": "powershell.exe -ExecutionPolicy Unrestricted -File bootstrap.ps1"
+    }
+    SETTINGS
+}
