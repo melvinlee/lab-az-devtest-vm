@@ -1,7 +1,3 @@
-provider "azurerm" {
-  # subscription_id = "${var.subscription_id}"    # tenant_id       = "${var.tenant_id}"    # client_id = "${var.client_id}"  # client_secret = "${var.client_secret}"
-}
-
 resource "azurerm_resource_group" "rg" {
   name     = "${var.resource_group_name}"
   location = "${var.resource_group_location}"
@@ -26,8 +22,22 @@ resource "azurerm_sql_server" "server" {
   }
 }
 
-resource "azurerm_sql_database" "database" {
-  name                             = "${var.database_name}"
+resource "azurerm_sql_database" "compute-database" {
+  name                             = "${var.compute_database_name}"
+  resource_group_name              = "${azurerm_resource_group.rg.name}"
+  location                         = "${azurerm_resource_group.rg.location}"
+  server_name                      = "${azurerm_sql_server.server.name}"
+  collation                        = "SQL_Latin1_General_CP1_CI_AS"
+  create_mode                      = "Default"
+  requested_service_objective_name = "Basic"
+
+  tags {
+    environment = "${var.environment}"
+  }
+}
+
+resource "azurerm_sql_database" "audit-database" {
+  name                             = "${var.audit_database_name}"
   resource_group_name              = "${azurerm_resource_group.rg.name}"
   location                         = "${azurerm_resource_group.rg.location}"
   server_name                      = "${azurerm_sql_server.server.name}"

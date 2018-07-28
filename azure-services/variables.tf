@@ -1,27 +1,7 @@
-# variable "client_id" {
-#   type        = "string"
-#   description = "Client ID"
-# }
-
-# variable "client_secret" {
-#   type        = "string"
-#   description = "Client secret."
-# }
-
-# variable "subscription_id" {
-#   type        = "string"
-#   description = "Subscription id."
-# }
-
-# variable "tenant_id" {
-#   type        = "string"
-#   description = "Tenant id."
-# }
-
 variable "resource_group_name" {
   type        = "string"
   description = "Name of the azure resource group."
-  default     = "devlab-rg"
+  default     = "devlab-services-rg"
 }
 
 variable "resource_group_location" {
@@ -30,9 +10,14 @@ variable "resource_group_location" {
   default     = "southeastasia"
 }
 
-variable "database_name" {
+variable "compute_database_name" {
   type        = "string"
-  description = "Name of the database."
+  description = "Name of Compute database."
+}
+
+variable "audit_database_name" {
+  type        = "string"
+  description = "Name of Audit database."
 }
 
 variable "environment" {
