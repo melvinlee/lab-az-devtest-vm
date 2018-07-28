@@ -1,8 +1,3 @@
-resource "azurerm_resource_group" "rg" {
-  name     = "${var.resource_group_name}"
-  location = "${var.resource_group_location}"
-}
-
 #an attempt to keep the mysqlname unique
 resource "random_integer" "random_int" {
   min = 1000
@@ -18,6 +13,7 @@ resource "azurerm_sql_server" "server" {
   administrator_login_password = "${var.admin_password}"
 
   tags {
+    source      = "terraform"
     environment = "${var.environment}"
   }
 }
@@ -32,6 +28,7 @@ resource "azurerm_sql_database" "compute-database" {
   requested_service_objective_name = "Basic"
 
   tags {
+    source      = "terraform"
     environment = "${var.environment}"
   }
 }
@@ -46,6 +43,7 @@ resource "azurerm_sql_database" "audit-database" {
   requested_service_objective_name = "Basic"
 
   tags {
+    source      = "terraform"
     environment = "${var.environment}"
   }
 }
