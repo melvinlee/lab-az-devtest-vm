@@ -2,7 +2,8 @@
 
 ## What does it create ?
 
-The sql-database.tf deploy [SQL Database](https://azure.microsoft.com/en-us/services/sql-database/) and 2 databases.
+1. sql-database.tf deploy [SQL Database](https://azure.microsoft.com/en-us/services/sql-database/) and 2 databases.
+2. service-bus.tf deploy [Service bus](https://azure.microsoft.com/en-us/services/service-bus/).
 
 ## Required Tooling
 
@@ -25,6 +26,8 @@ audit_database_name = "AuditDB"
 admin_login = "dbadmin"
 
 admin_password = "<password>"
+
+servicebus_name = "dev-audit"
 ```
 
 6. Run `terraform init` then `terraform plan` to see what will be created, finally if it looks good run `terraform apply`
