@@ -13,11 +13,13 @@ variable "resource_group_location" {
 variable "compute_database_name" {
   type        = "string"
   description = "Name of Compute database."
+  default     = "ComputeDB"
 }
 
 variable "audit_database_name" {
   type        = "string"
   description = "Name of Audit database."
+  default     = "AuditDB"
 }
 
 variable "environment" {
