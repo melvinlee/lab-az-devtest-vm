@@ -19,15 +19,9 @@
 Example: `varaibles.tfvars`
 
 ```tf
-compute_database_name = "ComputeDB"
-
-audit_database_name = "AuditDB"
-
 admin_login = "dbadmin"
 
 admin_password = "<password>"
-
-servicebus_name = "dev-audit"
 ```
 
 6. Run `terraform init` then `terraform plan` to see what will be created, finally if it looks good run `terraform apply`
