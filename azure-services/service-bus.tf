@@ -1,8 +1,10 @@
 resource "azurerm_servicebus_namespace" "servicebus" {
-  name                = "${var.servicebus_name}"
+  name                = "servicebus-${random_integer.random_int.result}"
   location            = "${var.resource_group_location}"
   resource_group_name = "${var.resource_group_name}"
   sku                 = "standard"
+
+  depends_on = ["azurerm_resource_group.rg"]
 
   tags {
     source      = "terraform"
