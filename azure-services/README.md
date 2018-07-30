@@ -16,7 +16,7 @@
 2. Clone this repository and cd into the directory
 3. Create a varaibles.tfvars file and add your variables
 
-Example: `varaibles.tfvars`
+Example: `variables.tfvars`
 
 ```tf
 admin_login = "dbadmin"
@@ -24,7 +24,7 @@ admin_login = "dbadmin"
 admin_password = "<password>"
 ```
 
-6. Run `terraform init` then `terraform plan` to see what will be created, finally if it looks good run `terraform apply`
+4. Run `terraform init` then `terraform plan` to see what will be created, finally if it looks good run `terraform apply`
 
 ```sh
 terraform init
