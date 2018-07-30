@@ -20,8 +20,14 @@ Example: `variables.tfvars`
 
 ```tf
 admin_login = "dbadmin"
-
 admin_password = "<password>"
+
+# Optional
+resource_group_name = "" (Default:devlab-services-rg)
+resource_group_location = ""  (Default:southeastasia)
+queue_name = "" (Default:audit_queue)
+compute_database_name = "" (Default:ComputeDB)
+audit_database_name = "" (Default:AuditDB)
 ```
 
 4. Run `terraform init` then `terraform plan` to see what will be created, finally if it looks good run `terraform apply`
