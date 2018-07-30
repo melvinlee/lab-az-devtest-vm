@@ -19,6 +19,7 @@ variable "environment" {
 variable "vm_size" {
   type        = "string"
   description = "virtual machine size"
+  default     = "Standard_D4s_v3"
 }
 
 variable "vm_hostname" {
