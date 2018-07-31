@@ -2,9 +2,9 @@
 # RESOURCES
 ##################################################################################
 resource "azurerm_servicebus_namespace" "servicebus" {
-  name                = "servicebus-${random_integer.random_int.result}"
-  location            = "${var.resource_group_location}"
-  resource_group_name = "${var.resource_group_name}"
+  name                = "servicebus-${var.resources_id}-${random_integer.random_int.result}"
+  location            = "${azurerm_resource_group.rg.location}"
+  resource_group_name = "${azurerm_resource_group.rg.name}"
   sku                 = "standard"
 
   depends_on = ["azurerm_resource_group.rg"]

@@ -9,7 +9,7 @@ resource "random_integer" "random_int" {
 }
 
 resource "azurerm_sql_server" "server" {
-  name                         = "sqlserver-${random_integer.random_int.result}"
+  name                         = "sqlserver-${var.resources_id}-${random_integer.random_int.result}"
   resource_group_name          = "${azurerm_resource_group.rg.name}"
   version                      = "12.0"
   location                     = "${azurerm_resource_group.rg.location}"

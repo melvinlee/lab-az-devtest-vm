@@ -20,10 +20,11 @@ Example: `variables.tfvars`
 
 ```tf
 admin_login = "dbadmin"
-admin_password = "<password>"
+resource_id = "<yourname_nospaces>"
 
 # Optional
-resource_group_name = "" (Default:devlab-services-rg)
+admin_password = "" (Default:Passw0rd123!)
+resource_group_name = "" (Default:devlab-services)
 resource_group_location = ""  (Default:southeastasia)
 queue_name = "" (Default:audit_queue)
 compute_database_name = "" (Default:ComputeDB)

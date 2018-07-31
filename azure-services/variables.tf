@@ -4,7 +4,7 @@
 variable "resource_group_name" {
   type        = "string"
   description = "Name of the azure resource group."
-  default     = "devlab-services-rg"
+  default     = "devlab-services"
 }
 
 variable "resource_group_location" {
@@ -39,4 +39,11 @@ variable "admin_login" {
 variable "admin_password" {
   type        = "string"
   description = "Password for db login."
+  default     = "Passw0rd123!"
+}
+
+variable "resources_id" {
+  type        = "string"
+  description = "Name of the resource id."
+  default     = "devlab"
 }
