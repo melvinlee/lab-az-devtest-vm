@@ -12,7 +12,7 @@
 
 ## Running
 
-1. Login to the Azure CLI az login
+1. Login to the Azure CLI az login (Skip this if you using cloud shell)
 2. Clone this repository and cd into the directory
 3. Create a varaibles.tfvars file and add your variables
 
