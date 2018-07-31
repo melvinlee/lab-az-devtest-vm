@@ -1,3 +1,6 @@
+##################################################################################
+# RESOURCES
+##################################################################################
 resource "azurerm_servicebus_namespace" "servicebus" {
   name                = "servicebus-${random_integer.random_int.result}"
   location            = "${var.resource_group_location}"
