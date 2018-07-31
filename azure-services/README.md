@@ -12,7 +12,7 @@
 
 ## Running
 
-1. Login to the Azure CLI az login (Skip this if you using cloud shell)
+1. Login to the Azure CLI using `az login` (Skip this if you using cloud shell)
 2. Clone this repository and cd into the directory
 3. Create a varaibles.tfvars file and add your variables
 
@@ -31,7 +31,13 @@ compute_database_name = "" (Default:ComputeDB)
 audit_database_name = "" (Default:AuditDB)
 ```
 
-4. Run `terraform init` then `terraform plan` to see what will be created, finally if it looks good run `terraform apply`
+4. Alternatively, variables can be populated via CLI using `var` flag .
+
+```sh
+terraform plan -var "resources_id=<yourname_nospaces>" -out=azure-services.tfplan
+```
+
+5. Run `terraform init` then `terraform plan` to see what will be created, finally if it looks good run `terraform apply`
 
 ```sh
 terraform init
