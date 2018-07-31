@@ -34,6 +34,7 @@ variable "environment" {
 variable "admin_login" {
   type        = "string"
   description = "User name for db login."
+  default     = "dbadmin"
 }
 
 variable "admin_password" {
