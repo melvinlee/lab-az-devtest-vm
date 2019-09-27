@@ -1,19 +1,13 @@
-variable "resource_group_name" {
+variable "name" {
   type        = "string"
-  description = "Name of the azure resource group."
-  default     = "devlab-rg"
+  description = "Name of the dev lab."
+  default     = "my-devlab"
 }
 
-variable "resource_group_location" {
+variable "location" {
   type        = "string"
   description = "Location of the azure resource group."
   default     = "southeastasia"
-}
-
-variable "environment" {
-  type        = "string"
-  description = "dev, test or production."
-  default     = "dev"
 }
 
 variable "vm_size" {
@@ -22,19 +16,14 @@ variable "vm_size" {
   default     = "Standard_D4s_v3"
 }
 
-variable "vm_hostname" {
-  description = "local name of the VM"
-  default     = "myvm"
-}
-
 variable "admin_username" {
   type        = "string"
-  description = "OS admin name"
+  description = "(Required) OS admin name for remote access."
 }
 
 variable "admin_password" {
   type        = "string"
-  description = "OS admin password"
+  description = "(Required) OS admin password for remote access."
 }
 
 variable "boot_diagnostics" {
