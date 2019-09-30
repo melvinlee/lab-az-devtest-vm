@@ -14,8 +14,14 @@ choco install googlechrome -y
 # Utilities
 choco install everything /run-on-system-startup /desktop-shortcut -y
 
-# Enable HyperV for Docker
-Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V,Containers -All
+# Enable Hyper-V for Docker
+Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V -All
+
+# Restart
+Restart-Computer -Force
+
+# Enable Container for Docker
+Enable-WindowsOptionalFeature -Online -FeatureName Containers -All
 
 # Restart
 Restart-Computer -Force
