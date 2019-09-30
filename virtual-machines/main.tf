@@ -1,6 +1,6 @@
 
 resource "azurerm_resource_group" "rg" {
-  name     = var.name
+  name     = "${var.name}-rg"
   location = var.location
   tags     = local.tags
 }
@@ -40,15 +40,15 @@ resource "random_integer" "int" {
 # Allocate a Public IP address for your Virtual Machine for remote access
 resource "azurerm_public_ip" "ip" {
   name                = "${var.name}-ip"
-  location            = "${azurerm_resource_group.rg.location}"
-  resource_group_name = "${azurerm_resource_group.rg.name}"
+  location            = azurerm_resource_group.rg.location
+  resource_group_name = azurerm_resource_group.rg.name
   allocation_method   = "Dynamic"
   domain_name_label   = local.uniqued_name
 
   tags = local.tags
 }
 
-resource "azurerm_network_interface" "networkinterface" {
+resource "azurerm_network_interface" "nic" {
   name                      = "${var.name}${random_integer.int.result}-nic"
   location                  = azurerm_resource_group.rg.location
   resource_group_name       = azurerm_resource_group.rg.name
@@ -62,12 +62,14 @@ resource "azurerm_network_interface" "networkinterface" {
   }
 
   tags = local.tags
+
+  depends_on = ["azurerm_public_ip.ip", "module.vnet"]
 }
 
 resource "azurerm_network_security_group" "nsg" {
   name                = "${var.name}-nsg"
-  location            = "${azurerm_resource_group.rg.location}"
-  resource_group_name = "${azurerm_resource_group.rg.name}"
+  location            = azurerm_resource_group.rg.location
+  resource_group_name = azurerm_resource_group.rg.name
 
   security_rule {
     name                       = "RDP"
@@ -99,15 +101,15 @@ resource "azurerm_virtual_machine" "vm" {
   name                          = "${var.name}-vm"
   location                      = azurerm_resource_group.rg.location
   resource_group_name           = azurerm_resource_group.rg.name
-  network_interface_ids         = ["${azurerm_network_interface.networkinterface.id}"]
+  network_interface_ids         = [azurerm_network_interface.nic.id]
   vm_size                       = var.vm_size
   delete_os_disk_on_termination = true
 
   storage_image_reference {
-    publisher = "microsoftvisualstudio"
-    offer     = "visualstudio2019latest"
-    sku       = "vs-2019-comm-latest-win10-n"
-    version   = "latest"
+    publisher = var.image["publisher"]
+    offer     = var.image["offer"]
+    sku       = var.image["sku"]
+    version   = var.image["version"]
   }
 
   storage_os_disk {
@@ -118,20 +120,23 @@ resource "azurerm_virtual_machine" "vm" {
   }
 
   os_profile {
-    computer_name  = "${var.name}"
-    admin_username = "${var.admin_username}"
-    admin_password = "${var.admin_password}"
+    computer_name  = var.name
+    admin_username = var.admin_username
+    admin_password = var.admin_password
   }
 
   os_profile_windows_config {
-    # enable_automatic_upgrades = true
-    # provision_vm_agent        = true
+    enable_automatic_upgrades = true
+    provision_vm_agent        = true                      # Required VM Agent to execute Azure virtual machine extensions.
+    timezone                  = "Singapore Standard Time" # Specifies the time zone of the virtual machine, the possible values are defined http://jackstromberg.com/2017/01/list-of-time-zones-consumed-by-azure/
   }
 
   boot_diagnostics {
-    enabled     = "${var.boot_diagnostics}"
-    storage_uri = "${var.boot_diagnostics == "true" ? azurerm_storage_account.sa.primary_blob_endpoint : ""}"
+    enabled     = var.boot_diagnostics
+    storage_uri = var.boot_diagnostics == "true" ? azurerm_storage_account.sa.primary_blob_endpoint : ""
   }
 
   tags = local.tags
+
+  depends_on = ["azurerm_network_interface.nic"]
 }

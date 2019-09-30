@@ -16,6 +16,17 @@ variable "vm_size" {
   default     = "Standard_D4s_v3"
 }
 
+variable "image" {
+  type = map(string)
+  description = "To provision vm from an Azure Platform Image"
+  default = {
+    publisher = "microsoftvisualstudio"
+    offer     = "visualstudio2019latest"
+    sku       = "vs-2019-comm-latest-win10-n"
+    version   = "latest"
+  }
+}
+
 variable "admin_username" {
   type        = "string"
   description = "(Required) OS admin name for remote access."
