@@ -20,11 +20,10 @@ Add-LocalGroupMember -Group "docker-users" -Member "Developer"
 # Enable Hyper-V for Docker
 Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V -All
 
-# Restart
-Restart-Computer -Force
-
 # Enable Container for Docker
 Enable-WindowsOptionalFeature -Online -FeatureName Containers -All
+
+Start-Sleep -s 30
 
 # Restart
 Restart-Computer -Force
