@@ -1,15 +1,3 @@
-variable "name" {
-  type        = "string"
-  description = "Name of the dev lab."
-  default     = "my-devlab"
-}
-
-variable "location" {
-  type        = "string"
-  description = "Location of the azure resource group."
-  default     = "southeastasia"
-}
-
 variable "vm_size" {
   type        = "string"
   description = "virtual machine size"
@@ -17,7 +5,7 @@ variable "vm_size" {
 }
 
 variable "image" {
-  type = map(string)
+  type        = map(string)
   description = "To provision vm from an Azure Platform Image"
   default = {
     publisher = "microsoftvisualstudio"

@@ -15,10 +15,10 @@ output "vm_name" {
 
 output "location" {
 description = "The location where the resource group is created"
-  value = azurerm_resource_group.rg.location
+  value = local.location
 }
 
 output "resource_group" {
 description = "The resource group name."
-  value = azurerm_resource_group.rg.name
+  value = local.resource_group
 }

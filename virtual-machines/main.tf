@@ -1,33 +1,22 @@
+data "terraform_remote_state" "vnet" {
+  backend = "local"
 
-resource "azurerm_resource_group" "rg" {
-  name     = "${var.name}-rg"
-  location = var.location
-  tags     = local.tags
-}
-
-locals {
-  location       = azurerm_resource_group.rg.location
-  resource_group = azurerm_resource_group.rg.name
-  name           = var.name
-  uniqued_name   = "${var.name}${random_integer.int.result}"
-  tags = {
-    creationSource = "terraform"
-    env            = "my-dev"
-    name           = "my-name"
+  config = {
+    path = "${path.module}/../vnet/terraform.tfstate"
   }
 }
 
-module "vnet" {
-  source         = "./vnet"
-  name           = local.name
-  location       = local.location
-  resource_group = local.resource_group
-  tags_map       = local.tags
+locals {
+  location       = data.terraform_remote_state.vnet.outputs.location
+  resource_group = data.terraform_remote_state.vnet.outputs.resource_group
+  name           = data.terraform_remote_state.vnet.outputs.name
+  uniqued_name   = "${data.terraform_remote_state.vnet.outputs.name}${random_integer.int.result}"
+  tags           = data.terraform_remote_state.vnet.outputs.tags
 }
 
 resource "random_id" "id" {
   keepers = {
-    name = "${var.name}"
+    name = local.name
   }
   byte_length = 6
 }
@@ -39,9 +28,9 @@ resource "random_integer" "int" {
 
 # Allocate a Public IP address for your Virtual Machine for remote access
 resource "azurerm_public_ip" "ip" {
-  name                = "${var.name}-ip"
-  location            = azurerm_resource_group.rg.location
-  resource_group_name = azurerm_resource_group.rg.name
+  name                = "${local.name}-ip"
+  location            = local.location
+  resource_group_name = local.resource_group
   allocation_method   = "Dynamic"
   domain_name_label   = local.uniqued_name
 
@@ -49,27 +38,27 @@ resource "azurerm_public_ip" "ip" {
 }
 
 resource "azurerm_network_interface" "nic" {
-  name                      = "${var.name}${random_integer.int.result}-nic"
-  location                  = azurerm_resource_group.rg.location
-  resource_group_name       = azurerm_resource_group.rg.name
+  name                      = "${local.name}${random_integer.int.result}-nic"
+  location                  = local.location
+  resource_group_name       = local.resource_group
   network_security_group_id = azurerm_network_security_group.nsg.id
 
   ip_configuration {
     name                          = "ipconfig"
-    subnet_id                     = module.vnet.subnet_id
+    subnet_id                     = data.terraform_remote_state.vnet.outputs.subnet_id
     private_ip_address_allocation = "dynamic"
     public_ip_address_id          = azurerm_public_ip.ip.id
   }
 
   tags = local.tags
 
-  depends_on = ["azurerm_public_ip.ip", "module.vnet"]
+  depends_on = [azurerm_public_ip.ip]
 }
 
 resource "azurerm_network_security_group" "nsg" {
-  name                = "${var.name}-nsg"
-  location            = azurerm_resource_group.rg.location
-  resource_group_name = azurerm_resource_group.rg.name
+  name                = "${local.name}-nsg"
+  location            = local.location
+  resource_group_name = local.resource_group
 
   security_rule {
     name                       = "RDP"
@@ -89,8 +78,8 @@ resource "azurerm_network_security_group" "nsg" {
 
 resource "azurerm_storage_account" "sa" {
   name                     = "bootdiag${lower(random_id.id.hex)}"
-  resource_group_name      = azurerm_resource_group.rg.name
-  location                 = azurerm_resource_group.rg.location
+  location                 = local.location
+  resource_group_name      = local.resource_group
   account_tier             = "Standard"
   account_replication_type = "LRS"
 
@@ -98,9 +87,9 @@ resource "azurerm_storage_account" "sa" {
 }
 
 resource "azurerm_virtual_machine" "vm" {
-  name                          = "${var.name}-vm"
-  location                      = azurerm_resource_group.rg.location
-  resource_group_name           = azurerm_resource_group.rg.name
+  name                          = "${local.name}-vm"
+  location                      = local.location
+  resource_group_name           = local.resource_group
   network_interface_ids         = [azurerm_network_interface.nic.id]
   vm_size                       = var.vm_size
   delete_os_disk_on_termination = true
@@ -113,14 +102,14 @@ resource "azurerm_virtual_machine" "vm" {
   }
 
   storage_os_disk {
-    name              = "${var.name}-osdisk-${lower(random_id.id.hex)}"
+    name              = "${local.name}-osdisk-${lower(random_id.id.hex)}"
     managed_disk_type = "Premium_LRS"
     caching           = "ReadWrite"
     create_option     = "FromImage"
   }
 
   os_profile {
-    computer_name  = var.name
+    computer_name  = local.name
     admin_username = var.admin_username
     admin_password = var.admin_password
   }
@@ -138,5 +127,5 @@ resource "azurerm_virtual_machine" "vm" {
 
   tags = local.tags
 
-  depends_on = ["azurerm_network_interface.nic"]
+  depends_on = [azurerm_network_interface.nic]
 }
